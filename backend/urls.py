@@ -5,9 +5,15 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
 from users.views import UserViewSet
+from locations.views import CountryViewSet, StateViewSet, CityViewSet
+from classifieds.views import ClassifiedViewSet
 
 router = DefaultRouter()
+router.register("classifieds", ClassifiedViewSet, "classified")
 router.register("users", UserViewSet, "user")
+router.register("countries", CountryViewSet, "country")
+router.register("states", StateViewSet, "state")
+router.register("cities", CityViewSet, "city")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
