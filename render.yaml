@@ -1,0 +1,20 @@
+databases:
+  - name: onest
+    databaseName: onest
+    user: onest
+    plan: free
+
+services:
+  - type: web
+    name: onest
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn -b 0.0.0.0 backend.wsgi:application"
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: onest
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
