@@ -16,5 +16,3 @@ services:
         fromDatabase:
           name: onest
           property: connectionString
-      - key: SECRET_KEY
-        generateValue: true
