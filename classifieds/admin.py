@@ -7,6 +7,7 @@ class ClassifiedAdmin(admin.ModelAdmin):
     date_hierarchy = "created_at"
     list_display = [
         "id",
+        "owner",
         "title",
         "country",
         "state",

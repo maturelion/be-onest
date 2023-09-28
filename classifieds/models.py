@@ -1,6 +1,7 @@
 from django.db import models
 import uuid
 from locations.models import Country, State, City
+from users.models import User
 
 
 class Classified(models.Model):
@@ -8,6 +9,7 @@ class Classified(models.Model):
         primary_key=True,
         default=uuid.uuid4,
         editable=False)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     description = models.TextField()
     country = models.ForeignKey(Country, on_delete=models.CASCADE)

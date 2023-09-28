@@ -12,6 +12,7 @@ class ClassifiedSerializer(ModelSerializer):
         fields = [
             "url",
             "id",
+            "owner",
             "title",
             "description",
             "country",
