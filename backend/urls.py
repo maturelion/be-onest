@@ -7,9 +7,11 @@ from rest_framework.routers import DefaultRouter
 from users.views import UserViewSet
 from locations.views import CountryViewSet, StateViewSet, CityViewSet
 from classifieds.views import ClassifiedViewSet
+from deposits.views import DepositViewSet, deposit_webhook
 
 router = DefaultRouter()
 router.register("classifieds", ClassifiedViewSet, "classified")
+router.register("deposits", DepositViewSet, "deposit")
 router.register("users", UserViewSet, "user")
 router.register("countries", CountryViewSet, "country")
 router.register("states", StateViewSet, "state")
@@ -21,6 +23,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('rest-auth/', include('dj_rest_auth.urls')),
     path('rest-auth/registration/', include('dj_rest_auth.registration.urls')),
+    path('deposit-webhook/', deposit_webhook, name="deposit-webhook"),
     re_path(r'^media/(?P<path>.*)$', serve,
             {'document_root': settings.MEDIA_ROOT}),
     re_path(r'^static/(?P<path>.*)$', serve,

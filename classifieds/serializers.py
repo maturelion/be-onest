@@ -19,6 +19,7 @@ class ClassifiedSerializer(ModelSerializer):
             "state",
             "city",
             "city_set",
+            "photos",
             "is_hot",
             "created_at",
             "updated_at",
