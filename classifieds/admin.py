@@ -13,6 +13,7 @@ class ClassifiedAdmin(admin.ModelAdmin):
         "state",
         "city",
         "is_hot",
+        "views",
         "created_at",
         "updated_at",
     ]

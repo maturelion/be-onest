@@ -22,6 +22,7 @@ class Classified(models.Model):
     city = models.ForeignKey(City, on_delete=models.CASCADE)
     photos = models.ManyToManyField('Photo', blank=True)
     is_hot = models.BooleanField(default=False)
+    views = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
