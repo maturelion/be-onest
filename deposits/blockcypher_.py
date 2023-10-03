@@ -120,10 +120,10 @@ class BlockcypherWallet:
         )
         return get_unconfirmed_balance
 
-    def send_faucet_tx(self, address_to_fund):
+    def send_faucet_tx(self, address_to_fund, satoshi=1_000_000):
         faucet_tx = blockcypher.send_faucet_coins(
             address_to_fund,
-            satoshis=1_000,
+            satoshis=satoshi,
             coin_symbol=self.coin,
             api_key=self.api_key,
         )
@@ -132,7 +132,7 @@ class BlockcypherWallet:
     def deposit_webhook(self, subscription_address):
         webhook_id = blockcypher.subscribe_to_address_webhook(
             callback_url=f"{env('BASE_URL')}/deposit-webhook/",
-            confirmations=int(env("CONFIRMATIONS")),
+            confirmations=int(env("HOOK_CONFIRMATIONS")),
             subscription_address=subscription_address,
             event="tx-confirmation",
             coin_symbol=self.coin,

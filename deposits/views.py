@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from .models import Deposit
 from .serializers import DepositSerializer
-from .blockcypher import BlockcypherWallet
+from .blockcypher_ import BlockcypherWallet
 from django.db import transaction
 from wallets.models import Wallet
 from utils.utils import get_ticker_price
@@ -28,13 +28,12 @@ class DepositViewSet(ModelViewSet):
     def perform_create(self, serializer):
         with transaction.atomic():
             # generate address and subscribe to web hook
-            blockcypher = BlockcypherWallet()
-            address = blockcypher.generate_address()
-            hook = blockcypher.deposit_webhook(address["address"])
+            bcy = BlockcypherWallet()
+            address = bcy.generate_address()
+            hook = bcy.deposit_webhook(address["address"])
 
             # create and save deposit
             deposit = serializer.save()
-            # deposit.user = self.request.user
             deposit.address_used = address["address"]
             deposit.wallet = address
             deposit.ref_number = hook
@@ -46,25 +45,24 @@ class DepositViewSet(ModelViewSet):
 @api_view(['POST'])
 def deposit_webhook(request):
     data = request.data
-    print(data)
     deposit = Deposit.objects.get(address_used=data["addresses"][0])
     wallet = Wallet.objects.get(user=deposit.user)
-    value = data['total'] - data['fees']
-    price_in_usd = value * float(get_ticker_price()["price"])
+    value = blockcypher.satoshis_to_btc(float(data["outputs"][0]["value"]))
+    price_in_usd = float(value) * float(get_ticker_price()["price"])
 
     if data["confirmations"] == 0:
         deposit.tx_hash = data["hash"]
         deposit.save()
 
-    if data["confirmations"] >= 1 and deposit.status != "SUCCESSFUL" and data["double_spend"] == False:
+    if data["confirmations"] >= int(env("CONFIRMATIONS")) and deposit.status != "SUCCESSFUL" and data["double_spend"] == False:
         deposit.status = "SUCCESSFUL"
         deposit.amount = price_in_usd
         deposit.save()
         wallet.balance += price_in_usd
         wallet.save()
 
-    if data["confirmations"] == int(env("CONFIRMATIONS")):
-        blockcypher = BlockcypherWallet()
-        blockcypher.unsubscribe_from_webhook(deposit.ref_number)
+    if data["confirmations"] >= int(env("CONFIRMATIONS")) and deposit.status == "SUCCESSFUL":
+        bcy = BlockcypherWallet()
+        bcy.unsubscribe_from_webhook(deposit.ref_number)
 
     return HttpResponse("OK", status=200)
