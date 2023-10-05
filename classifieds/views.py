@@ -10,7 +10,7 @@ class ClassifiedViewSet(ModelViewSet):
     serializer_class = ClassifiedSerializer
     lookup_field = "id"
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["country__name", "state__name", "city__name"]
+    filterset_fields = ["country__name", "state__name", "city__name", "owner"]
 
     def perform_create(self, serializer):
         classified = serializer.save()

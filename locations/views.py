@@ -14,6 +14,7 @@ class StateViewSet(ModelViewSet):
     queryset = State.objects.all()
     serializer_class = StateSerializer
     lookup_field = "id"
+    filterset_fields = ["country"]
 
 
 class CityViewSet(ModelViewSet):
