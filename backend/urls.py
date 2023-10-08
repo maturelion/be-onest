@@ -8,6 +8,7 @@ from users.views import UserViewSet
 from locations.views import CountryViewSet, StateViewSet, CityViewSet
 from classifieds.views import ClassifiedViewSet
 from deposits.views import DepositViewSet, deposit_webhook
+from wallets.views import WalletViewSet
 
 router = DefaultRouter()
 router.register("classifieds", ClassifiedViewSet, "classified")
@@ -16,6 +17,7 @@ router.register("users", UserViewSet, "user")
 router.register("countries", CountryViewSet, "country")
 router.register("states", StateViewSet, "state")
 router.register("cities", CityViewSet, "city")
+router.register("wallets", WalletViewSet, "wallet")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
